@@ -1,6 +1,6 @@
 import {Injectable}   from '@angular/core';
 import {XHRHandler}   from './xhrhandler.service';
-import {LoginRequest} from '../data/loginRequest'
+import {LoginRequest} from '../data/loginrequest'
 import {Observable}   from 'rxjs';
 
 @Injectable() 
