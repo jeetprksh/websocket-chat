@@ -2,18 +2,18 @@ package com.chat.enums;
 
 public enum MessageType {
 	
-	MESSAGE(1),
-	TYPING(2),
-	JOINED(3),
-	LEFT(4);
+	MESSAGE("MESSAGE"),
+	TYPING("TYPING"),
+	JOINED("JOINED"),
+	LEFT("LEFT");
 	
-	private final int messageType;
+	private final String messageType;
 	
-	MessageType(int messageType) {
+	MessageType(String messageType) {
 		this.messageType = messageType;
 	}
 	
-	public int getType() {
+	public String getType() {
 		return messageType;
 	}
 }
