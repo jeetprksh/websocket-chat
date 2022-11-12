@@ -1,40 +1,42 @@
-import {Component}            from '@angular/core';
-import {Message}              from '../data/message';
-import {AppDataService}       from '../service/appdata.service';
-import {WebSocketService}     from '../service/websocket.service';
+import {Component, EventEmitter, 
+  Input, OnChanges, 
+  Output, SimpleChanges}            from '@angular/core';
+import {Message}                    from '../data/message';
+import {AppDataService}             from '../service/appdata.service';
+import {WebSocketService}           from '../service/websocket.service';
 
 @Component({
   selector: 'chat-stream',
   templateUrl: '../template/chatstream.component.html',
   styleUrls: ['../style/chatstream.component.css']
 })
-export class ChatStreamComponent {
+export class ChatStreamComponent implements OnChanges {
+
+  @Input()
+  inputMessage = ''
+
+  @Output()
+  outputMessage = new EventEmitter<string>();
 
   message: string = ''; 
   publishedMessage: Message[] = new Array();
   showTypingIndicator: boolean = false;
   typingUser: string;
   loggedinUserId: number;
-  websocket: WebSocket;
 
   constructor(private appDataService: AppDataService,
               private websocketService: WebSocketService) {
-    this.websocket = this.websocketService.createNew();
     this.loggedinUserId = this.appDataService.userId;
-    this.startListening();
   }
 
-  startListening() {
-    this.websocket.onmessage = (event: MessageEvent) => {
-      let message: Message = JSON.parse(event.data);
-      if (message.type == 'MESSAGE') {
-        this.publishedMessage.push(message);
-      } else if (message.type == 'TYPING') {
-        if (message.from != this.loggedinUserId) {
-          this.showUserTypingIndicator(message.fromUserName);
-        }
-      }
-    };
+  sendTypeIndicator() {
+    let message: Message = {
+      type: 'TYPING',
+      from: this.appDataService.userId,
+      fromUserName: this.appDataService.userName,
+      message: null
+    }
+    this.outputMessage.emit(JSON.stringify(message));
   }
 
   sendMessage() {
@@ -47,18 +49,8 @@ export class ChatStreamComponent {
       fromUserName: this.appDataService.userName,
       message: msg
     }
-    this.websocket.send(JSON.stringify(message));
+    this.outputMessage.emit(JSON.stringify(message));
     this.message = '';
-  }
-
-  sendTypeIndicator() {
-    let message: Message = {
-      type: 'TYPING',
-      from: this.appDataService.userId,
-      fromUserName: this.appDataService.userName,
-      message: null
-    }
-    this.websocket.send(JSON.stringify(message));
   }
 
   showUserTypingIndicator(userName: string) {
@@ -72,6 +64,18 @@ export class ChatStreamComponent {
   hideUserTypingIndicator() {
     if (this.showTypingIndicator) {
       this.showTypingIndicator = false;
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const chng = changes['inputMessage'];
+    let message: Message = JSON.parse(chng.currentValue);
+    if (message.type == 'MESSAGE') {
+      this.publishedMessage.push(message);
+    } else if (message.type == 'TYPING') {
+      if (message.from != this.loggedinUserId) {
+        this.showUserTypingIndicator(message.fromUserName);
+      }
     }
   }
 
