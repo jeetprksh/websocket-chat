@@ -17,9 +17,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatComponent } from './chat/chat.component';
 import { HttpClientModule } from '@angular/common/http';
+import { UsersComponent } from './chat/users/users.component';
+import { ChatStreamComponent } from './chat/chat-stream/chat-stream.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     NavigationComponent,
     LoginFormComponent,
-    ChatComponent
+    ChatComponent,
+    UsersComponent,
+    ChatStreamComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +48,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatRadioModule,
     MatCardModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

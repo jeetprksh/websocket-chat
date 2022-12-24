@@ -1,1 +1,4 @@
-<p>chat works!</p>
+<div class="chat">
+  <app-users [inputMessage]="currentMessage"></app-users>
+  <app-chat-stream (outputMessage)="recieveMessage($event)" [inputMessage]="currentMessage"></app-chat-stream>
+</div>
