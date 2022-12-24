@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="loginForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="login-form">
     <mat-card-header>
       <mat-card-title>Login</mat-card-title>
@@ -8,7 +8,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput placeholder="Name" formControlName="name">
-            <mat-error *ngIf="addressForm.controls['name'].hasError('required')">
+            <mat-error *ngIf="loginForm.controls['name'].hasError('required')">
               Name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
