@@ -20,7 +20,6 @@ export class ChatComponent implements OnInit {
     this.loggedInUser = this.appDataService.getData("userName");
     this.websocket = this.websocketService.createNew();
     this.websocket.onopen = (event: Event) => {
-      console.info("Event :: " + event);
       let message: Message = {
         type: 'JOINED',
         from: Number(this.appDataService.getData("userId")),

@@ -31,13 +31,13 @@ export class UsersComponent implements OnInit {
 
   initUserList() {
     this.appService.listUser().subscribe(response => {
-      this.users = response;
+      this.users = response as User[];
     });
   }
 
   setUserStatus(userId: Number, isOnline: boolean) {
     let user: User = this.users.find(u => u.id == userId)!;
-    user.isOnline = isOnline;
+    user.online = isOnline;
   }
 
   ngOnInit(): void {
