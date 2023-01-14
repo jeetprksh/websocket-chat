@@ -1,4 +1,4 @@
-<div class="chat-stream" style="height: 80vh; overflow-y: scroll;">
+<div class="chat-stream">
   <div class="stream-div">
     <div class="chat-message-wrapper" *ngFor="let message of publishedMessage">
       <div class="chat-message" [ngStyle]="{'float': (loggedinUserId === message.from) ? 'right' : ''}">
