@@ -1,0 +1,6 @@
+.github/
+.idea/
+.settings/
+target/
+Dockerfile
+websocket-chat.iml

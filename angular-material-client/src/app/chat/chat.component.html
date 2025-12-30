@@ -1,0 +1,8 @@
+<div class="chat">
+  <div style="width: 20%; float: left;">
+    <app-users [inputMessage]="currentMessage"></app-users>
+  </div>
+  <div style="margin-left: 21%; width: 78%; height: 100%;">
+    <app-chat-stream (outputMessage)="recieveMessage($event)" [inputMessage]="currentMessage"></app-chat-stream>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+.github/
+.idea/
+target/
+Dockerfile
+LICENSE
+README.md
+websocket-chat.iml
+.editorconfig
+Dockerfile
+README.md
+node_modules/
+dist/

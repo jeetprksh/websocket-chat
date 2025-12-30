@@ -1,0 +1,16 @@
+version: '3'
+services: 
+  server:
+    container_name: websocket-chat-server
+    restart: always
+    build: ./server
+    ports: 
+      - '8185:8185'
+  client:
+    container_name: websocket-chat-client
+    restart: always
+    build: ./client
+    ports: 
+      - '80:80'
+    links: 
+      - server
