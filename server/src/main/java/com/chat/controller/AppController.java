@@ -4,6 +4,7 @@ import com.chat.pojo.LoginRequest;
 import com.chat.pojo.User;
 
 import com.chat.websocket.WebSocketHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
 
 @CrossOrigin
 @RestController
