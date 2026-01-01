@@ -2,7 +2,8 @@ import { Injectable, NgZone } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { Message } from '../data/message';
 
-const WEBSOCKET_URL = 'ws://localhost:8185/websocket';
+// Build a websocket URL based on the browser hostname so it works when served from a container
+const WEBSOCKET_URL = `ws://${window.location.hostname}:8185/websocket`;
 
 @Injectable()
 export class WebSocketService {

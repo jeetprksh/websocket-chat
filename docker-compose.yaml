@@ -1,16 +1,16 @@
-version: '3'
-services: 
+version: '3.8'
+services:
   server:
     container_name: websocket-chat-server
     restart: always
     build: ./server
-    ports: 
+    ports:
       - '8185:8185'
-  client:
-    container_name: websocket-chat-client
+  chat-ui:
+    container_name: websocket-chat-ui
     restart: always
-    build: ./client
-    ports: 
+    build: ./chat-ui
+    ports:
       - '80:80'
-    links: 
+    depends_on:
       - server
