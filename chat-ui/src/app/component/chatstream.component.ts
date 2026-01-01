@@ -1,9 +1,8 @@
-import {Component, EventEmitter, 
-  Input, OnChanges, 
-  Output, SimpleChanges}            from '@angular/core';
-import {Message}                    from '../data/message';
-import {AppDataService}             from '../service/appdata.service';
-import {WebSocketService}           from '../service/websocket.service';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Message } from '../data/message';
+import { AppDataService } from '../service/appdata.service';
+import { WebSocketService } from '../service/websocket.service';
 
 @Component({
   selector: 'chat-stream',
@@ -11,23 +10,36 @@ import {WebSocketService}           from '../service/websocket.service';
   standalone: false,
   styleUrls: ['../style/chatstream.component.css']
 })
-export class ChatStreamComponent implements OnChanges {
+export class ChatStreamComponent implements OnInit, OnDestroy {
 
-  @Input()
-  inputMessage = ''
-
-  @Output()
-  outputMessage = new EventEmitter<string>();
-
-  message: string = ''; 
+  message: string = '';
   publishedMessage: Message[] = new Array();
   showTypingIndicator: boolean = false;
   typingUser: string = '';
   loggedinUserId: number;
+  private sub?: Subscription;
 
   constructor(private appDataService: AppDataService,
-              private websocketService: WebSocketService) {
+              private websocketService: WebSocketService,
+              private cd: ChangeDetectorRef) {
     this.loggedinUserId = this.appDataService.userId;
+  }
+
+  ngOnInit(): void {
+    this.sub = this.websocketService.messages$.subscribe((message: Message) => {
+      if (message.type == 'MESSAGE') {
+        this.publishedMessage.push(message);
+      } else if (message.type == 'TYPING') {
+        if (message.from != this.loggedinUserId) {
+          this.showUserTypingIndicator(message.fromUserName);
+        }
+      }
+      this.cd.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   sendTypeIndicator() {
@@ -37,7 +49,7 @@ export class ChatStreamComponent implements OnChanges {
       fromUserName: this.appDataService.userName,
       message: ''
     }
-    this.outputMessage.emit(JSON.stringify(message));
+    this.websocketService.send(JSON.stringify(message));
   }
 
   sendMessage() {
@@ -50,33 +62,32 @@ export class ChatStreamComponent implements OnChanges {
       fromUserName: this.appDataService.userName,
       message: msg
     }
-    this.outputMessage.emit(JSON.stringify(message));
+    this.websocketService.send(JSON.stringify(message));
     this.message = '';
   }
+
+  private typingTimer: any;
 
   showUserTypingIndicator(userName: string) {
     this.typingUser = userName;
     this.showTypingIndicator = true;
-    setTimeout(() => {
+    if (this.typingTimer) {
+      clearTimeout(this.typingTimer);
+    }
+    // hide after 2 seconds — ensure change detection by calling detectChanges in the timeout
+    this.typingTimer = setTimeout(() => {
       this.hideUserTypingIndicator();
-    }, 1000);
+      this.cd.detectChanges();
+    }, 2000);
   }
 
   hideUserTypingIndicator() {
     if (this.showTypingIndicator) {
       this.showTypingIndicator = false;
     }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    const chng = changes['inputMessage'];
-    let message: Message = JSON.parse(chng.currentValue);
-    if (message.type == 'MESSAGE') {
-      this.publishedMessage.push(message);
-    } else if (message.type == 'TYPING') {
-      if (message.from != this.loggedinUserId) {
-        this.showUserTypingIndicator(message.fromUserName);
-      }
+    if (this.typingTimer) {
+      clearTimeout(this.typingTimer);
+      this.typingTimer = undefined;
     }
   }
 

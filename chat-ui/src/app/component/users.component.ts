@@ -1,8 +1,9 @@
-import {Component, Input, 
-  OnChanges, SimpleChanges}     from '@angular/core';
-import {AppService}             from '../service/app.service';
-import {User}                   from '../data/user';
-import {Message}                from '../data/message';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AppService } from '../service/app.service';
+import { User } from '../data/user';
+import { Message } from '../data/message';
+import { WebSocketService } from '../service/websocket.service';
 
 @Component({
   selector: 'users',
@@ -10,25 +11,31 @@ import {Message}                from '../data/message';
   standalone: false,
   styleUrls: ['../style/user.component.css']
 })
-export class UsersComponent implements OnChanges {
-
-  @Input()
-  inputMessage = ''
+export class UsersComponent implements OnInit, OnDestroy {
 
   users: User[] = new Array();
+  private sub?: Subscription;
 
-  constructor(private appService: AppService) {
+  constructor(private appService: AppService,
+    private websocketService: WebSocketService,
+    private cd: ChangeDetectorRef) {
     this.initUserList();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const chng = changes['inputMessage'];
-    let message: Message = JSON.parse(chng.currentValue);
-    if (message.type == 'JOINED') {
-      this.setUserStatus(message.from, true);
-    } else if (message.type == 'LEFT') {
-      this.setUserStatus(message.from, false);
-    }
+  ngOnInit(): void {
+    this.sub = this.websocketService.messages$.subscribe((message: Message) => {
+      if (message.type == 'JOINED') {
+        this.setUserStatus(message.from, true);
+      } else if (message.type == 'LEFT') {
+        this.setUserStatus(message.from, false);
+      }
+      // ensure immediate update
+      this.cd.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   initUserList() {

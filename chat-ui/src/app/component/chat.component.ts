@@ -1,7 +1,8 @@
-import {Component, HostListener}  from '@angular/core';
-import {Message}                  from '../data/message';
-import {AppDataService}           from '../service/appdata.service';
-import {WebSocketService}         from '../service/websocket.service';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Message } from '../data/message';
+import { AppDataService } from '../service/appdata.service';
+import { WebSocketService } from '../service/websocket.service';
 
 @Component({
   selector: 'chat',
@@ -9,57 +10,59 @@ import {WebSocketService}         from '../service/websocket.service';
   standalone: false,
   styleUrls: ['../style/chat.component.css']
 })
-export class ChatComponent {
-
-  currentMessage = ''
+export class ChatComponent implements OnInit, OnDestroy {
 
   loggedInUser: String;
-  websocket: WebSocket;
+  private sub?: Subscription;
 
   constructor(private appDataService: AppDataService,
     private websocketService: WebSocketService) {
     this.loggedInUser = appDataService.userName;
-    this.websocket = this.websocketService.createNew();
-    this.websocket.onopen = (ev: Event) => {
-      let message: Message = {
+    // connect to websocket service (it manages queue and open event)
+    this.websocketService.connect();
+  }
+
+  ngOnInit() {
+    // send JOINED when socket is open
+    this.sub = this.websocketService.onOpen$.subscribe(() => {
+      const message: Message = {
         type: 'JOINED',
         from: this.appDataService.userId,
         fromUserName: this.appDataService.userName,
         message: ''
-      }
-      this.websocket.send(JSON.stringify(message));
-    }
-    this.startListening();
-  }
-
-  startListening() {
-    this.websocket.onmessage = (event: MessageEvent) => {
-      this.currentMessage = event.data;
-    };
+      };
+      this.websocketService.send(JSON.stringify(message));
+    });
   }
 
   sendMessage(msg: string) {
     if (msg == '' || msg == undefined) return;
-    this.websocket.send(msg);
+    this.websocketService.send(msg);
   }
 
   private doLogout() {
 
   }
 
+  // no longer needed — chat-stream now sends directly through WebSocketService
   recieveMessage(message: string) {
     this.sendMessage(message)
   }
 
   @HostListener('window:beforeunload')
   close() {
-    let message: Message = {
+    const message: Message = {
       type: 'LEFT',
       from: this.appDataService.userId,
       fromUserName: this.appDataService.userName,
       message: ''
-    }
-    this.websocket.send(JSON.stringify(message));
+    };
+    this.websocketService.send(JSON.stringify(message));
+    this.websocketService.close();
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
 }
