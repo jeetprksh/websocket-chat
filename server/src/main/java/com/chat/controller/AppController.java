@@ -63,12 +63,16 @@ public class AppController {
 			validUsers.add(new User(2, "Samwise", false));
 			validUsers.add(new User(3, "Marry", false));
 			validUsers.add(new User(4, "Pippin", false));
-			validUsers.add(new User(5, "Gollum", false));
-			validUsers.add(new User(6, "Gandalf", false));
-			validUsers.add(new User(7, "Aragorn", false));
-			validUsers.add(new User(8, "Boromir", false));
-			validUsers.add(new User(9, "Legolas", false));
-			validUsers.add(new User(10, "Gimli", false));
+			validUsers.add(new User(5, "Eowyn", false));
+			validUsers.add(new User(6, "Gollum", false));
+			validUsers.add(new User(7, "Gandalf", false));
+			validUsers.add(new User(8, "Aragorn", false));
+			validUsers.add(new User(9, "Arwen", false));
+			validUsers.add(new User(10, "Boromir", false));
+			validUsers.add(new User(11, "Legolas", false));
+			validUsers.add(new User(12, "Galadriel", false));
+			validUsers.add(new User(13, "Gimli", false));
+			validUsers.add(new User(14, "Sauron", false));
 			return validUsers;
 		}
 	}

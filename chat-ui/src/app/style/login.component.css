@@ -1,0 +1,35 @@
+/* Type-ahead dropdown for login component */
+.typeahead { position: relative; }
+.typeahead-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.typeahead-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.typeahead-item:hover,
+.typeahead-item.active { background: #f5f5f5; }
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px; /* square with rounded edges */
+  object-fit: cover;
+  flex: none;
+}
+.name { text-align: left; font-size: 14px; color: #2c3e50; }

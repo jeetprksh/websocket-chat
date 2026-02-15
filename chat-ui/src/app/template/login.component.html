@@ -1,10 +1,34 @@
 <div id="login-form" class="col-md-offset-4 col-md-4">
-  <form class="form-horizontal">
+  <form class="form-horizontal" (ngSubmit)="doLogin()">
     <div class="form-group">
-      <div class="col-md-12">
-        <input type="text" class="form-control" id="userName" placeholder="Name" [(ngModel)]="userName" name="userName">
+      <div class="col-md-12 typeahead">
+        <input type="text"
+               class="form-control"
+               id="userName"
+               placeholder="Name"
+               [(ngModel)]="userName"
+               name="userName"
+               (input)="onInput()"
+               (focus)="showSuggestions = true"
+               (blur)="hideSuggestionsDelayed()"
+               (keydown)="onKeydown($event)">
+
+        <ul *ngIf="showSuggestions && filteredUsers.length" class="typeahead-list">
+          <li *ngFor="let user of filteredUsers; let i = index"
+              class="typeahead-item"
+              [class.active]="i === highlightedIndex"
+              (mousedown)="selectUser(user)"
+              (mouseover)="highlightedIndex = i">
+            <img class="avatar"
+                 [src]="getAvatarUrl(user.userName)"
+                 alt="{{user.userName}}"
+                 (error)="onAvatarError($event)">
+            <span class="name">{{ user.userName }}</span>
+          </li>
+        </ul>
       </div>
     </div>
+
     <div class="form-group">
       <div class="col-md-12">
         <button type="submit" class="btn btn-primary col-md-12" (click)="doLogin()">Start</button>
