@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { AppService } from '../service/app.service';
 import { Router } from '@angular/router';
 import { AppDataService } from '../service/appdata.service';
@@ -9,7 +9,7 @@ import { AppDataService } from '../service/appdata.service';
   styleUrls: ['../style/login.component.css'],
   standalone: false,
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   userName: string = '';
   showErrorMsg: boolean = false;
@@ -21,7 +21,11 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router,
               private appService: AppService,
-              private appDataService: AppDataService) { }
+              private appDataService: AppDataService,
+              private ngZone: NgZone) { }
+
+  private _onDocClick = (e: Event) => this.onDocumentClick(e);
+  private _onResize = () => this.adjustDropdownWidth();
 
   ngOnInit(): void {
     this.appService.listUser().subscribe((users: any[]) => {
@@ -33,6 +37,15 @@ export class LoginComponent implements OnInit {
       this.availableUsers = [];
       this.filteredUsers = [];
     });
+
+    // listen for clicks outside the typeahead to hide suggestions
+    document.addEventListener('click', this._onDocClick, true);
+    window.addEventListener('resize', this._onResize);
+  }
+
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this._onDocClick, true);
+    window.removeEventListener('resize', this._onResize);
   }
 
   onInput(): void {
@@ -44,6 +57,13 @@ export class LoginComponent implements OnInit {
     }
     this.highlightedIndex = -1;
     this.showSuggestions = this.filteredUsers.length > 0;
+    // ensure the dropdown width matches the input after DOM updates
+    if (this.showSuggestions) setTimeout(() => this.adjustDropdownWidth(), 0);
+  }
+
+  onFocus(): void {
+    this.showSuggestions = this.filteredUsers.length > 0;
+    setTimeout(() => this.adjustDropdownWidth(), 0);
   }
 
   selectUser(user: any): void {
@@ -58,6 +78,32 @@ export class LoginComponent implements OnInit {
       this.showSuggestions = false;
       this.highlightedIndex = -1;
     }, 150);
+  }
+
+  private onDocumentClick(e: Event): void {
+    const target = e.target as Node;
+    const loginEl = document.getElementById('login-form');
+    if (!loginEl) return;
+    if (!loginEl.contains(target)) {
+      // run inside zone so Angular detects the change
+      this.ngZone.run(() => {
+        this.showSuggestions = false;
+        this.highlightedIndex = -1;
+      });
+    }
+  }
+
+  private adjustDropdownWidth(): void {
+    const input = document.getElementById('userName') as HTMLElement | null;
+    const list = document.querySelector('#login-form .typeahead-list') as HTMLElement | null;
+    const container = input ? input.closest('.typeahead') as HTMLElement : null;
+    if (!input || !list || !container) return;
+    const inputRect = input.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    const width = Math.max(0, inputRect.width);
+    const left = inputRect.left - containerRect.left;
+    list.style.width = width + 'px';
+    list.style.left = left + 'px';
   }
 
   onKeydown(e: KeyboardEvent): void {

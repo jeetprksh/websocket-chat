@@ -2,11 +2,138 @@
 /* You can add global styles to this file, and also import other style files */
 html, body {
   height: 100%;
+  background-color: #ffffff;
 }
 
 #login-form {
   height: 100%;
-  background-color: lightblue;
+  background-color: #25D366;
   padding-top: 9%;
   font-weight: 100;
 }
+
+/* Flat UI overrides scoped to the login form only */
+#login-form {
+  --login-bg: #075E54;
+  --input-bg: #ffffff;
+  --input-border: rgba(0,0,0,0.08);
+  --primary: #128C7E;
+  --primary-text: #ffffff;
+}
+
+#login-form input,
+#login-form textarea,
+#login-form select,
+#login-form .form-control {
+  background: var(--input-bg);
+  border: 0;
+  border-bottom: 1px solid var(--input-border);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 10px 12px;
+  color: #111;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#login-form input:focus,
+#login-form textarea:focus,
+#login-form select:focus {
+  border-bottom-color: rgba(0,0,0,0.18);
+}
+
+/* Flat primary button */
+#login-form .btn-primary,
+#login-form button.primary {
+  background-color: var(--primary);
+  color: var(--primary-text);
+  border: 0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  box-shadow: none !important;
+  transition: background-color 120ms ease-in-out, opacity 120ms ease-in-out;
+  background-image: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+}
+
+#login-form .btn-primary:hover,
+#login-form button.primary:hover {
+  opacity: 0.95;
+}
+
+/* Stronger overrides for hover/focus/active to ensure a flat look (no gradient band) */
+#login-form .btn-primary:hover,
+#login-form .btn-primary:focus,
+#login-form .btn-primary:active,
+#login-form button.primary:hover,
+#login-form button.primary:focus,
+#login-form button.primary:active {
+  background-image: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border: 0 !important;
+  filter: brightness(0.98);
+}
+
+/* Remove any focus ring from keyboard navigation while keeping accessibility optional */
+#login-form .btn-primary:focus-visible,
+#login-form button.primary:focus-visible {
+  outline: 2px solid rgba(18,140,126,0.18);
+}
+
+/* Ensure avatars remain unchanged; keep any global avatar rules intact */
+
+/* Flat UI overrides scoped to the login form only */
+#login-form {
+  --login-bg: #075E54;
+  --input-bg: #ffffff;
+  --input-border: rgba(0,0,0,0.08);
+  --primary: #128C7E;
+  --primary-text: #ffffff;
+}
+
+#login-form input,
+#login-form textarea,
+#login-form select,
+#login-form .form-control {
+  background: var(--input-bg);
+  border: 0;
+  border-bottom: 1px solid var(--input-border);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 10px 12px;
+  color: #111;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#login-form input:focus,
+#login-form textarea:focus,
+#login-form select:focus {
+  border-bottom-color: rgba(0,0,0,0.18);
+}
+
+/* Flat primary button */
+#login-form .btn-primary,
+#login-form button.primary {
+  background-color: var(--primary);
+  color: var(--primary-text);
+  border: 0;
+  border-radius: 4px;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color 120ms ease-in-out, opacity 120ms ease-in-out;
+}
+
+#login-form .btn-primary:hover,
+#login-form button.primary:hover {
+  opacity: 0.95;
+}
+
+/* Ensure avatars remain unchanged; keep any global avatar rules intact */
