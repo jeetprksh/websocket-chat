@@ -1,5 +1,9 @@
 <div class="header">
-  <div class="logged-in-user col-md-2">{{loggedInUser}}</div>
+  <div class="logged-in-user" [class.online]="isOnline" [class.offline]="!isOnline">
+    <span class="status-dot" aria-hidden></span>
+    <img class="dp" [src]="getAvatarUrl()" alt="avatar" (error)="$event.target.style.display='none'">
+    <span class="name">{{ loggedInUser }}</span>
+  </div>
 </div>
 <div class="chat">
   <users class="col-md-3 users"></users>

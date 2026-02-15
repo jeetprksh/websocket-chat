@@ -38,13 +38,16 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.filteredUsers = [];
     });
 
-    // listen for clicks outside the typeahead to hide suggestions
-    document.addEventListener('click', this._onDocClick, true);
+    // listen for pointer down events outside the typeahead to hide suggestions
+    // use mousedown/touchstart so we catch the event before focus/blur ordering
+    document.addEventListener('mousedown', this._onDocClick, true);
+    document.addEventListener('touchstart', this._onDocClick, true);
     window.addEventListener('resize', this._onResize);
   }
 
   ngOnDestroy(): void {
-    document.removeEventListener('click', this._onDocClick, true);
+    document.removeEventListener('mousedown', this._onDocClick, true);
+    document.removeEventListener('touchstart', this._onDocClick, true);
     window.removeEventListener('resize', this._onResize);
   }
 

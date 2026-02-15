@@ -13,6 +13,7 @@ import { WebSocketService } from '../service/websocket.service';
 export class ChatComponent implements OnInit, OnDestroy {
 
   loggedInUser: String;
+  isOnline: boolean = false;
   private sub?: Subscription;
 
   constructor(private appDataService: AppDataService,
@@ -25,6 +26,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // send JOINED when socket is open
     this.sub = this.websocketService.onOpen$.subscribe(() => {
+      this.isOnline = true;
       const message: Message = {
         type: 'JOINED',
         from: this.appDataService.userId,
@@ -33,6 +35,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       };
       this.websocketService.send(JSON.stringify(message));
     });
+  }
+
+  getAvatarUrl(): string {
+    const name = this.appDataService.userName || '';
+    return '/images/users/' + encodeURIComponent(name) + '.png';
   }
 
   sendMessage(msg: string) {

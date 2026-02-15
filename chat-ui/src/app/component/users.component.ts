@@ -22,6 +22,11 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.initUserList();
   }
 
+  getAvatarUrl(user: User): string {
+    const name = (user && user.userName) ? String(user.userName) : '';
+    return '/images/users/' + encodeURIComponent(name) + '.png';
+  }
+
   ngOnInit(): void {
     this.sub = this.websocketService.messages$.subscribe((message: Message) => {
       if (message.type == 'JOINED') {
