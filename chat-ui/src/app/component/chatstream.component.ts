@@ -28,7 +28,11 @@ export class ChatStreamComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.websocketService.messages$.subscribe((message: Message) => {
       if (message.type == 'MESSAGE') {
-        this.publishedMessage.push(message);
+        // avoid duplicate when server echoes user's own optimistic message
+        const duplicate = this.publishedMessage.some(m => m.from === message.from && m.message === message.message);
+        if (!duplicate) {
+          this.publishedMessage.push(message);
+        }
       } else if (message.type == 'TYPING') {
         if (message.from != this.loggedinUserId) {
           this.showUserTypingIndicator(message.fromUserName);
@@ -62,7 +66,15 @@ export class ChatStreamComponent implements OnInit, OnDestroy {
       fromUserName: this.appDataService.userName,
       message: msg
     }
+
+    // optimistic update so message appears immediately
+    this.publishedMessage.push(message);
+    this.cd.detectChanges();
+
+    // send to server
     this.websocketService.send(JSON.stringify(message));
+
+    // clear input
     this.message = '';
   }
 

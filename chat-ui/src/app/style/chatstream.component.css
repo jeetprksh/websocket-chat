@@ -1,39 +1,91 @@
 .chat-stream {
   position: relative;
-  max-height: 88%;
-  height: 88%;
-  overflow: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #CB4154; /* new background */
+  border-radius: 25px; /* rounded corners */
+  padding: 12px;
+  box-sizing: border-box;
+  color: #fff;
 }
 
 .stream-div {
-  position: absolute;
-  bottom: 0;
+  position: relative;
+  bottom: auto;
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: auto;
-  height: 100%;
+  height: auto;
+  flex: 1 1 auto;
+  border-radius: 20px; /* inset so scrollbars don't touch outer corners */
+  padding-right: 6px;
+  /* scrollbar for Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #075E54 #CB4154;
+}
+
+/* WebKit scrollbar for chat stream (thin and inset) */
+.stream-div::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+.stream-div::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 6px;
+}
+.stream-div::-webkit-scrollbar-thumb {
+  background-color: #075E54;
+  border-radius: 6px;
+  border: 1px solid #CB4154;
+}
+.stream-div::-webkit-scrollbar-thumb:hover {
+  background-color: #064b45;
 }
 
 .chat-message {
-  background: lightskyblue;
-  margin: 4px 0px;
-  padding: 8px;
+  background: rgba(255,255,255,0.12);
+  margin: 6px 0px;
+  padding: 10px;
+  border-radius: 8px;
+  color: #fff;
 }
 
 .chat-username {
-  color: gray;
-  border-bottom: 1px solid gray;
+  color: rgba(255,255,255,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   font-size: 12px;
 }
 
 .typing-indicator {
-  color: gray;
+  color: rgba(255,255,255,0.8);
   font-style: italic;
   font-size: 11px;
   padding-left: 12px;
 }
 
 .message-form {
-  height: 12%;
-  padding: 20px 10px 20px 10px;
+  padding: 12px;
+  flex: 0 0 auto;
+}
+
+/* Flat input style (match login) */
+.message-form .form-control {
+  background: #ffffff;
+  border: 0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  box-shadow: none;
+  padding: 10px 12px;
+  color: #111;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 48px;
+  font-size: 16px;
+}
+
+.message-form .form-control:focus {
+  border-bottom-color: rgba(0,0,0,0.18);
 }

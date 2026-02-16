@@ -1,7 +1,9 @@
 <div class="users">
-  <div class="user" *ngFor="let user of users" [class.online]="user.isOnline" [class.offline]="!user.isOnline">
-    <span class="status-dot" aria-hidden></span>
-    <img class="dp" [src]="getAvatarUrl(user)" alt="{{user.userName}}" (error)="$event.target.style.display='none'">
-    <span class="name">{{ user.userName }}</span>
+  <div class="users-inner">
+    <div class="user" *ngFor="let user of users" [class.online]="user.isOnline" [class.offline]="!user.isOnline">
+      <span class="status-dot" aria-hidden></span>
+      <img class="dp" [src]="getAvatarUrl(user)" alt="{{user.userName}}" (error)="$event.target.style.display='none'">
+      <span class="name">{{ user.userName }}</span>
+    </div>
   </div>
 </div>

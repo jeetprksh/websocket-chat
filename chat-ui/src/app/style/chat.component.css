@@ -1,3 +1,10 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* make component fill viewport so inner layout can flex */
+  box-sizing: border-box;
+}
+
 .header {
   --header-height: 70px;
   height: var(--header-height); /* fixed height */
@@ -11,12 +18,33 @@
   color: #fff;
 }
 
-chat-stream {
-  height: 100%;
+/* main chat area fills remaining viewport height */
+.chat {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden; /* prevent page-level scrolling */
 }
 
-.chat {
-  height: 94%;
+/* specify left/right column widths using flex (replace Bootstrap grid) */
+.chat > users {
+  flex: 0 0 25%;
+  max-width: 25%;
+  box-sizing: border-box;
+}
+
+.chat > chat-stream {
+  flex: 1 1 75%;
+  box-sizing: border-box;
+}
+
+/* ensure host children take full height so their internals can scroll */
+.chat > users,
+.chat > chat-stream {
+  height: 100%;
+  display: block;
 }
 
 .users {

@@ -1,8 +1,50 @@
 .users {
   background: #128C7E;
-  border-radius: 15px;
+  border-radius: 25px; /* increase outer radius to 25px */
   padding: 8px;
   box-sizing: border-box;
+  height: 100%; /* fill available height to match chat-stream */
+  overflow: hidden; /* outer container clips corners; inner element scrolls */
+}
+
+/* inner scrollable area inset from outer corners so rounded edges remain visible */
+.users-inner {
+  margin: 4px 0; /* inset vertically so top-right/bottom-right corners are visible */
+  height: calc(100% - 24px); /* account for .users padding + users-inner margins */
+  overflow: auto;
+  border-radius: 25px; /* match outer radius */
+  box-sizing: border-box;
+  padding-right: 6px; /* space so content doesn't sit under the scrollbar */
+  /* scrollbar for Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #075E54 #128C7E;
+}
+
+/* WebKit-based scrollbar styling for the inner scroll area (thinner, inset from corners) */
+.users-inner::-webkit-scrollbar {
+  width: 6px; /* further reduced thickness so it doesn't touch rounded corners */
+  background: transparent;
+}
+.users-inner::-webkit-scrollbar-track {
+  background: transparent; /* keep track visually invisible so corners show */
+  border-radius: 8px;
+}
+.users-inner::-webkit-scrollbar-thumb {
+  background-color: #075E54;
+  border-radius: 8px;
+  border: 1px solid #128C7E; /* thinner border to inset the thumb from edge */
+}
+.users-inner::-webkit-scrollbar-thumb:hover {
+  background-color: #064b45;
+}
+.users-inner::-webkit-scrollbar-button {
+  background: #075E54;
+  height: 6px;
+  display: block;
+}
+.users-inner::-webkit-scrollbar-button:single-button:vertical:decrement,
+.users-inner::-webkit-scrollbar-button:single-button:vertical:increment {
+  background: #075E54;
 }
 
 .user {
@@ -23,7 +65,7 @@
 
 .user:hover {
   background: #075E54;
-  border-radius: 18px; /* more rounded on hover for semi-circular look */
+  border-radius: 25px; /* match users panel curvature on hover */
 }
 
 .status-dot {
