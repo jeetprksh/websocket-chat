@@ -18,6 +18,13 @@ export class ChatStreamComponent implements OnInit, OnDestroy {
   typingUser: string = '';
   loggedinUserId: number;
   private sub?: Subscription;
+  private typingIntervalId: any;
+  private lastTypedAt: number = 0;
+  private lastSentAt: number = 0;
+
+  getAvatarUrl(userName: string): string {
+    return '/images/users/' + encodeURIComponent(userName) + '.png';
+  }
 
   constructor(private appDataService: AppDataService,
               private websocketService: WebSocketService,
@@ -44,9 +51,41 @@ export class ChatStreamComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    if (this.typingIntervalId) {
+      clearInterval(this.typingIntervalId);
+      this.typingIntervalId = undefined;
+    }
   }
 
-  sendTypeIndicator() {
+  // Called on input events; throttle actual websocket sends so we don't send per-character
+  onTypingInput() {
+    this.lastTypedAt = Date.now();
+
+    // send immediately if nothing is already sending
+    if (!this.typingIntervalId) {
+      this.sendTypingIndicatorNow();
+
+      // start interval that will send every 900ms while the user keeps typing
+      this.typingIntervalId = setInterval(() => {
+        const now = Date.now();
+        // if user typed within the last 900ms, send another typing indicator
+        if (now - this.lastTypedAt < 900) {
+          this.sendTypingIndicatorNow();
+        } else {
+          // stop the interval when user stopped typing
+          clearInterval(this.typingIntervalId);
+          this.typingIntervalId = undefined;
+        }
+      }, 900);
+    }
+  }
+
+  private sendTypingIndicatorNow() {
+    const now = Date.now();
+    // avoid sending too frequently (safety guard)
+    if (now - this.lastSentAt < 300) return;
+    this.lastSentAt = now;
+
     let message: Message = {
       type: 'TYPING',
       from: this.appDataService.userId,
@@ -86,11 +125,12 @@ export class ChatStreamComponent implements OnInit, OnDestroy {
     if (this.typingTimer) {
       clearTimeout(this.typingTimer);
     }
-    // hide after 2 seconds — ensure change detection by calling detectChanges in the timeout
+    // hide after 1 second; if another typing indicator arrives before 0.9s,
+    // this timeout will be cleared and restarted which extends visibility
     this.typingTimer = setTimeout(() => {
       this.hideUserTypingIndicator();
       this.cd.detectChanges();
-    }, 2000);
+    }, 1000);
   }
 
   hideUserTypingIndicator() {

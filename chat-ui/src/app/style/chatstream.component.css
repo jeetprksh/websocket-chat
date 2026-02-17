@@ -21,11 +21,54 @@
   flex: 1 1 auto;
   border-radius: 20px; /* inset so scrollbars don't touch outer corners */
   padding-right: 6px;
+  display: flex;               /* stack messages vertically */
+  flex-direction: column;
+  gap: 6px;
   /* scrollbar for Firefox */
   scrollbar-width: thin;
   scrollbar-color: #075E54 #CB4154;
 }
 
+/* message alignment: left for others, right for logged-in user */
+.chat-message {
+  align-self: flex-start;     /* default: left */
+  min-width: 50%;             /* ensure minimum width is 50% */
+  max-width: 78%;
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  margin: 6px 0;
+}
+.chat-message.mine {
+  align-self: flex-end;       /* right-aligned for own messages */
+}
+
+.chat-message .sender {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.chat-message .sender .dp {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex: none;
+}
+.chat-message .chat-username {
+  font-size: 14px; /* appropriate font height */
+  color: rgba(255,255,255,0.95);
+}
+.chat-message .message-body {
+  background: rgba(255,255,255,0.12);
+  padding: 10px;
+  border-radius: 8px;
+  color: #fff;
+}
+.chat-message.mine .message-body {
+  background: rgba(255,255,255,0.20); /* slightly different tone for mine */
+}
 /* WebKit scrollbar for chat stream (thin and inset) */
 .stream-div::-webkit-scrollbar {
   width: 6px;
@@ -65,6 +108,16 @@
   padding-left: 12px;
 }
 
+/* Reserve a fixed area for typing indicator so it doesn't shrink the stream */
+.typing-area {
+  height: 20px;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  box-sizing: border-box;
+}
+
 .message-form {
   padding: 12px;
   flex: 0 0 auto;
@@ -88,4 +141,9 @@
 
 .message-form .form-control:focus {
   border-bottom-color: rgba(0,0,0,0.18);
+}
+
+/* nudge the input down by 5px */
+.message-form .form-control {
+  margin-top: 5px;
 }

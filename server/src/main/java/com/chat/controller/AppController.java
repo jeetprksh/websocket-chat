@@ -61,7 +61,7 @@ public class AppController {
 		} else {
 			validUsers.add(new User(1, "Frodo", false));
 			validUsers.add(new User(2, "Samwise", false));
-			validUsers.add(new User(3, "Marry", false));
+			validUsers.add(new User(3, "Merry", false));
 			validUsers.add(new User(4, "Pippin", false));
 			validUsers.add(new User(5, "Eowyn", false));
 			validUsers.add(new User(6, "Gollum", false));

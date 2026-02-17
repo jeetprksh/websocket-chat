@@ -8,6 +8,9 @@
 .header {
   --header-height: 70px;
   height: var(--header-height); /* fixed height */
+  min-height: var(--header-height);
+  max-height: var(--header-height);
+  flex: 0 0 var(--header-height);
   background: #128C7E;
   margin: 10px 10px 0 10px; /* 10px from top, left and right */
   border-radius: calc(var(--header-height) / 2); /* semicircular (pill) ends */
