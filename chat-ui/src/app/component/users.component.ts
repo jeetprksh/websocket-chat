@@ -46,6 +46,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   initUserList() {
     this.appService.listUser().subscribe(response => {
       this.users = response;
+      try { this.cd.detectChanges(); } catch (e) { }
     });
   }
 

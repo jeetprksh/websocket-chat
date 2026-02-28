@@ -1,8 +1,18 @@
 <div class="header">
-  <div class="logged-in-user" [class.online]="isOnline" [class.offline]="!isOnline">
+  <div class="logged-in-user" #userMenu [class.online]="isOnline" [class.offline]="!isOnline" (click)="toggleUserMenu($event)">
     <span class="status-dot" aria-hidden></span>
     <img class="dp" [src]="getAvatarUrl()" alt="avatar" (error)="$event.target.style.display='none'">
     <span class="name">{{ loggedInUser }}</span>
+    <div class="user-dropdown" *ngIf="showUserMenu">
+      <button class="logout-btn" (click)="logout($event)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13 19H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Logout</span>
+      </button>
+    </div>
   </div>
 </div>
 <div class="chat">

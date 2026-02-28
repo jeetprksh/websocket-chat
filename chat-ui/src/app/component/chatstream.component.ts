@@ -80,6 +80,37 @@ export class ChatStreamComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Auto-resize the textarea up to 3 lines, then allow scrolling
+  adjustTextarea(target: any) {
+    try {
+      const el = target as HTMLTextAreaElement;
+      if (!el) return;
+      el.style.height = 'auto';
+      const cs = window.getComputedStyle(el);
+      const lineHeight = parseFloat(cs.lineHeight || '20') || 20;
+      const paddingTop = parseFloat(cs.paddingTop || '10') || 10;
+      const paddingBottom = parseFloat(cs.paddingBottom || '10') || 10;
+      const maxHeight = lineHeight * 3 + paddingTop + paddingBottom;
+      const newHeight = Math.min(el.scrollHeight, maxHeight);
+      el.style.height = newHeight + 'px';
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  onTextareaKeydown(e: KeyboardEvent) {
+    // Enter submits, Shift+Enter inserts newline
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      this.sendMessage();
+      // reset textarea height after send
+      setTimeout(() => {
+        const ta = document.querySelector('.message-form textarea') as HTMLTextAreaElement | null;
+        if (ta) ta.style.height = '';
+      }, 0);
+    }
+  }
+
   private sendTypingIndicatorNow() {
     const now = Date.now();
     // avoid sending too frequently (safety guard)
@@ -115,6 +146,11 @@ export class ChatStreamComponent implements OnInit, OnDestroy {
 
     // clear input
     this.message = '';
+    // also clear textarea height if present
+    setTimeout(() => {
+      const ta = document.querySelector('.message-form textarea') as HTMLTextAreaElement | null;
+      if (ta) ta.style.height = '';
+    }, 0);
   }
 
   private typingTimer: any;

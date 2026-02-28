@@ -93,3 +93,37 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.logged-in-user {
+  position: relative; /* anchor for dropdown */
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 100%; /* match the logged-in-user width */
+  background: #128C7E;
+  color: #fff;
+  border-radius: 999px; /* pill-shaped */
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  padding: 6px;
+  z-index: 50;
+}
+.user-dropdown .logout-btn {
+  display: block;
+  width: calc(100% - 12px);
+  margin: 6px auto;
+  border: 0;
+  background: transparent;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #fff;
+  text-align: left;
+  border-radius: 999px; /* rounded semicircular on hover area */
+}
+.user-dropdown .logout-btn:hover {
+  background: #075E54;
+}
+.user-dropdown svg { flex: none; }
+.user-dropdown span { font-size: 14px; }

@@ -14,8 +14,10 @@
       <div *ngIf="showTypingIndicator" class="typing-indicator">{{typingUser}} is typing...</div>
     </div>
     <form (ngSubmit)="sendMessage()">
-            <input class="form-control" placeholder="Message..." autocomplete="off" type="text" name="message"
-              [(ngModel)]="message" (input)="onTypingInput()" />
+      <textarea class="form-control" placeholder="Message..." autocomplete="off" name="message" rows="1"
+                [(ngModel)]="message"
+                (input)="onTypingInput(); adjustTextarea($event.target)"
+                (keydown)="onTextareaKeydown($event)"></textarea>
     </form>
   </div>
 </div>

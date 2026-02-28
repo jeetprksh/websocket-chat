@@ -8,7 +8,7 @@ html, body {
 
 #login-form {
   height: 100%;
-  background-color: #25D366;
+  background-color: #128C7E;
   padding-top: 9%;
   font-weight: 100;
 }
@@ -18,7 +18,7 @@ html, body {
   --login-bg: #075E54;
   --input-bg: #ffffff;
   --input-border: rgba(0,0,0,0.08);
-  --primary: #128C7E;
+  --primary: #CB4154;
   --primary-text: #ffffff;
 }
 
@@ -83,7 +83,7 @@ html, body {
 /* Remove any focus ring from keyboard navigation while keeping accessibility optional */
 #login-form .btn-primary:focus-visible,
 #login-form button.primary:focus-visible {
-  outline: 2px solid rgba(18,140,126,0.18);
+  outline: 2px solid rgba(203,65,84,0.18);
 }
 
 /* Ensure avatars remain unchanged; keep any global avatar rules intact */
@@ -93,7 +93,7 @@ html, body {
   --login-bg: #075E54;
   --input-bg: #ffffff;
   --input-border: rgba(0,0,0,0.08);
-  --primary: #128C7E;
+  --primary: #CB4154;
   --primary-text: #ffffff;
 }
 

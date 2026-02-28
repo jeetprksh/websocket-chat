@@ -65,6 +65,7 @@
   padding: 10px;
   border-radius: 8px;
   color: #fff;
+  white-space: pre-wrap; /* preserve newlines in message text */
 }
 .chat-message.mine .message-body {
   background: rgba(255,255,255,0.20); /* slightly different tone for mine */
@@ -135,8 +136,12 @@
   outline: none;
   -webkit-appearance: none;
   appearance: none;
-  height: 48px;
   font-size: 16px;
+  line-height: 20px;
+  min-height: 48px;
+  max-height: calc(20px * 3 + 20px); /* 3 lines + vertical padding */
+  resize: none;
+  overflow-y: auto;
 }
 
 .message-form .form-control:focus {
