@@ -1,7 +1,0 @@
-<div class="header">
-  <div class="logged-in-user col-md-2">{{loggedInUser}}</div>
-</div>
-<div class="chat">
-  <users [inputMessage]="currentMessage" class="col-md-3 users"></users>
-  <chat-stream (outputMessage)="recieveMessage($event)" [inputMessage]="currentMessage" class="col-md-9"></chat-stream>
-</div>
