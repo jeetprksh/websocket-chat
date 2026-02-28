@@ -24,7 +24,7 @@ public class AppController {
 	@Autowired
 	private WebSocketHandler webSocketHandler;
 
-	private List<User> validUsers = new ArrayList<>();
+	private final List<User> validUsers = new ArrayList<>();
 	
 	@RequestMapping(value = "/user/login", method = RequestMethod.POST)
 	public User userLogin(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
