@@ -53,15 +53,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       fromUserName: this.appDataService.userName,
       message: ''
     };
-    try { this.websocketService.send(JSON.stringify(message)); } catch (e) { }
-    try { this.websocketService.close(); } catch (e) { }
-
-    // clear local data
-    try { this.appDataService.clearData(); } catch (e) { }
-
-    this.showUserMenu = false;
-    // navigate back to login
-    try { this.router.navigate(['/login']); } catch (e) { }
+    try { 
+      this.websocketService.send(JSON.stringify(message));
+      this.websocketService.close();
+      this.appDataService.clearData();
+      this.router.navigate(['/login']);
+    } catch (e) { }
   }
 
   ngOnInit() {
@@ -97,7 +94,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.sendMessage(message)
   }
 
-  @HostListener('window:beforeunload')
   close() {
     if (this.disconnected) return;
     this.disconnected = true;
@@ -111,28 +107,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     try {
       // attempt to send a final LEFT message
       this.websocketService.send(JSON.stringify(message));
+      this.websocketService.close();
     } catch (e) {
-      // ignore send errors during unload
-    }
-    // ensure socket is closed
-    try { this.websocketService.close(); } catch (e) { }
-  }
 
-  // also handle pagehide (mobile browsers) and visibilitychange as a fallback
-  @HostListener('window:pagehide')
-  onPageHide() {
-    this.close();
-  }
-
-  @HostListener('document:visibilitychange')
-  onVisibilityChange() {
-    if (document.visibilityState === 'hidden') {
-      this.close();
     }
   }
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    this.close();
   }
 
 }

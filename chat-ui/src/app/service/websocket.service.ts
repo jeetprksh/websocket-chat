@@ -1,9 +1,13 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { Message } from '../data/message';
+import { AppDataService } from './appdata.service';
 
 // Build a websocket URL based on the browser hostname so it works when served from a container
-const WEBSOCKET_URL = `ws://${window.location.hostname}:8185/websocket`;
+// Build a websocket base URL based on the browser hostname so it works when served from a container
+const WS_HOST = window.location.hostname;
+const WS_PORT = 8185;
+const WEBSOCKET_BASE = `ws://${WS_HOST}:${WS_PORT}/websocket`;
 
 @Injectable()
 export class WebSocketService {
@@ -18,10 +22,20 @@ export class WebSocketService {
 
   private queuedSends: string[] = [];
 
-  constructor(private ngZone: NgZone) { }
+  constructor(private ngZone: NgZone,
+              private appData: AppDataService) { }
 
   connect(): void {
-    this.websocket = new WebSocket(WEBSOCKET_URL);
+    // include user info as query parameters since browser sockets can't set headers
+    let url = WEBSOCKET_BASE;
+    try {
+      const id = encodeURIComponent(String(this.appData.userId || ''));
+      const name = encodeURIComponent(this.appData.userName || '');
+      url += `?userId=${id}&userName=${name}`;
+    } catch (e) {
+      // ignore
+    }
+    this.websocket = new WebSocket(url);
 
     this.websocket.onopen = () => {
       // Flush queue when socket opens
