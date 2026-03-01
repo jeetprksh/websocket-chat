@@ -1,5 +1,5 @@
 <div class="header">
-  <div class="logged-in-user" #userMenu [class.online]="isOnline" [class.offline]="!isOnline" (click)="toggleUserMenu($event)">
+  <div class="logged-in-user" #userMenu [class.online]="online" [class.offline]="!online" (click)="toggleUserMenu($event)">
     <span class="status-dot" aria-hidden></span>
     <img class="dp" [src]="getAvatarUrl()" alt="avatar" (error)="$event.target.style.display='none'">
     <span class="name">{{ loggedInUser }}</span>

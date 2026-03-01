@@ -15,11 +15,11 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   users: User[] = new Array();
   private sub?: Subscription;
+  private openSub?: Subscription;
 
   constructor(private appService: AppService,
     private websocketService: WebSocketService,
     private cd: ChangeDetectorRef) {
-    this.initUserList();
   }
 
   getAvatarUrl(user: User): string {
@@ -28,32 +28,38 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // load user list when websocket connection is established
+    this.openSub = this.websocketService.onOpen$.subscribe(() => {
+      this.initUserList();
+    });
+
     this.sub = this.websocketService.messages$.subscribe((message: Message) => {
       if (message.type == 'JOINED') {
         this.setUserStatus(message.from, true);
       } else if (message.type == 'LEFT') {
         this.setUserStatus(message.from, false);
       }
-      // ensure immediate update
-      this.cd.detectChanges();
+      // mark for check instead of forcing change detection
+      this.cd.markForCheck();
     });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.openSub?.unsubscribe();
   }
 
   initUserList() {
     this.appService.listUser().subscribe(response => {
       this.users = response;
-      try { this.cd.detectChanges(); } catch (e) { }
+      this.cd.markForCheck();
     });
   }
 
   setUserStatus(userId: Number, isOnline: boolean) {
     const user = this.users.find(u => u.id == userId);
     if (user) {
-      user.isOnline = isOnline;
+      user.online = isOnline;
     }
   }
 

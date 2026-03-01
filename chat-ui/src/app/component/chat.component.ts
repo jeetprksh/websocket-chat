@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Message } from '../data/message';
@@ -14,15 +14,17 @@ import { WebSocketService } from '../service/websocket.service';
 export class ChatComponent implements OnInit, OnDestroy {
 
   loggedInUser: String;
-  isOnline: boolean = false;
+  online: boolean = false;
   private sub?: Subscription;
+  private messagesSub?: Subscription;
   private disconnected: boolean = false;
   showUserMenu: boolean = false;
   @ViewChild('userMenu', { static: false }) userMenuRef?: ElementRef;
 
   constructor(private appDataService: AppDataService,
     private websocketService: WebSocketService,
-    private router: Router) {
+    private router: Router,
+    private cd: ChangeDetectorRef) {
     this.loggedInUser = appDataService.userName;
     // connect to websocket service (it manages queue and open event)
     this.websocketService.connect();
@@ -64,7 +66,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // send JOINED when socket is open
     this.sub = this.websocketService.onOpen$.subscribe(() => {
-      this.isOnline = true;
+      this.online = true;
       const message: Message = {
         type: 'JOINED',
         from: this.appDataService.userId,
@@ -72,6 +74,17 @@ export class ChatComponent implements OnInit, OnDestroy {
         message: ''
       };
       this.websocketService.send(JSON.stringify(message));
+    });
+
+    // listen for JOINED / LEFT messages to update local online status using markForCheck
+    this.messagesSub = this.websocketService.messages$.subscribe((message: Message) => {
+      if (message.type === 'JOINED' && message.from === this.appDataService.userId) {
+        this.online = true;
+        this.cd.markForCheck();
+      } else if (message.type === 'LEFT' && message.from === this.appDataService.userId) {
+        this.online = false;
+        this.cd.markForCheck();
+      }
     });
   }
 
@@ -115,6 +128,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    this.messagesSub?.unsubscribe();
     this.close();
   }
 
