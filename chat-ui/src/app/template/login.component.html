@@ -1,4 +1,4 @@
-<div id="login-form" class="col-md-offset-4 col-md-4">
+<div id="login-form">
   <form class="form-horizontal" (ngSubmit)="doLogin()">
     <div class="form-group">
       <div class="col-md-12 typeahead">
@@ -9,7 +9,7 @@
                [(ngModel)]="userName"
                name="userName"
                (input)="onInput()"
-           (focus)="onFocus()"
+               (focus)="onFocus()"
                (blur)="hideSuggestionsDelayed()"
                (keydown)="onKeydown($event)">
 
