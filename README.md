@@ -2,6 +2,11 @@
 
 This repo contains a simple WebSocket chat demo (Spring Boot backend + Angular frontend).
 
+<video controls width="640">
+  <source src="./assets/chat.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 ## Getting up and running ⚡
 
 It will require two terminals to run server and frontend:
