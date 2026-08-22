@@ -49,3 +49,11 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
+
+# Android Studio / Gradle
+mobile-app/.gradle/
+mobile-app/.idea/
+mobile-app/app/build/
+mobile-app/local.properties
+*.apk
+*.aab

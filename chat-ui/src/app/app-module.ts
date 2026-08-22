@@ -4,15 +4,15 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { LoginComponent } from './component/login.component';
-import { ChatComponent } from './component/chat.component';
-import { UsersComponent } from './component/users.component';
-import { ChatStreamComponent } from './component/chatstream.component';
+import { LoginComponent } from './login/login.component';
+import { ChatComponent } from './chat/chat.component';
+import { UsersComponent } from './chat/users.component';
+import { ChatStreamComponent } from './chat/chatstream.component';
 import { provideNgxWebstorage, withLocalStorage } from 'ngx-webstorage';
-import { AppService } from './service/app.service';
-import { AppDataService } from './service/appdata.service';
-import { WebSocketService } from './service/websocket.service';
-import { XHRHandler } from './service/xhrhandler.service';
+import { AppService } from './core/app.service';
+import { AppDataService } from './core/appdata.service';
+import { WebSocketService } from './chat/websocket.service';
+import { XHRHandler } from './core/xhrhandler.service';
 
 @NgModule({
   declarations: [
